@@ -66,6 +66,19 @@ const getProductsByPriceRange = async (priceFrom, priceTo) => {
   );
   return result;
 };
+const getAvailableProducts = async (available) => {
+  let isAvailable;
+  if (available === "true") {
+    isAvailable = 1;
+  } else if (available === "false") {
+    isAvailable = 0;
+  }
+  const [result] = await pool.query(
+    `SELECT * FROM products WHERE available = ?`,
+    [isAvailable]
+  );
+  return result;
+};
 
 module.exports = {
   getAllProducts,
@@ -74,4 +87,5 @@ module.exports = {
   deleteProductById,
   updateProductById,
   getProductsByPriceRange,
+  getAvailableProducts,
 };

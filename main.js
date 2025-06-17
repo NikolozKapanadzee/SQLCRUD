@@ -6,18 +6,21 @@ const {
   deleteProductById,
   updateProductById,
   getProductsByPriceRange,
+  getAvailableProducts,
 } = require("./config/connectToSQL");
 const app = express();
 app.use(express.json());
 
 app.get("/products", async (req, res) => {
-  const { priceFrom, priceTo } = req.query;
+  const { priceFrom, priceTo, available } = req.query;
   let resp;
   if (priceFrom && priceTo) {
     if (isNaN(priceFrom) || isNaN(priceTo)) {
-      return res.status(400).json({ message: "i am waitting for numbers" });
+      return res.status(400).json({ message: "i am waiting for numbers" });
     }
     resp = await getProductsByPriceRange(priceFrom, priceTo);
+  } else if (available) {
+    resp = await getAvailableProducts(available);
   } else {
     resp = await getAllProducts();
   }

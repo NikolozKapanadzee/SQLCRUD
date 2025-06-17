@@ -4,6 +4,7 @@ const {
   getProductsByID,
   createProduct,
   deleteProductById,
+  updateProductById,
 } = require("./config/connectToSQL");
 const app = express();
 app.use(express.json());
@@ -34,6 +35,18 @@ app.delete("/products/:id", async (req, res) => {
   res.json({
     message: "product deleted successfully",
     product: deletedProduct,
+  });
+});
+app.put("/products/:id", async (req, res) => {
+  const { id } = req.params;
+  const { name, price, available } = req.body;
+  const updatedProduct = await updateProductById(id, name, price, available);
+  if (!updatedProduct) {
+    return res.status(404).json({ message: "product not found" });
+  }
+  res.json({
+    message: "product has been updated",
+    product: updatedProduct,
   });
 });
 app.listen(3000, () => {

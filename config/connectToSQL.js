@@ -45,9 +45,19 @@ const deleteProductById = async (id) => {
   );
   return product;
 };
-const updateProductById = async (id) => {
+const updateProductById = async (id, name, price, available) => {
   const product = await getProductsByID(id);
   if (!product) return null;
+  await pool.query(
+    `
+    UPDATE products
+    SET name = ?, price = ?, available = ?
+    WHERE id = ?
+    `,
+    [name, price, available, id]
+  );
+  const updatedProduct = await getProductsByID(id);
+  return updatedProduct;
 };
 
 module.exports = {
@@ -55,4 +65,5 @@ module.exports = {
   getProductsByID,
   createProduct,
   deleteProductById,
+  updateProductById,
 };

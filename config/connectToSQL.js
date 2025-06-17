@@ -59,6 +59,13 @@ const updateProductById = async (id, name, price, available) => {
   const updatedProduct = await getProductsByID(id);
   return updatedProduct;
 };
+const getProductsByPriceRange = async (priceFrom, priceTo) => {
+  const [result] = await pool.query(
+    `SELECT * FROM products WHERE price BETWEEN ? AND ?`,
+    [priceFrom, priceTo]
+  );
+  return result;
+};
 
 module.exports = {
   getAllProducts,
@@ -66,4 +73,5 @@ module.exports = {
   createProduct,
   deleteProductById,
   updateProductById,
+  getProductsByPriceRange,
 };

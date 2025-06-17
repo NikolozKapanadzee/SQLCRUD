@@ -5,12 +5,22 @@ const {
   createProduct,
   deleteProductById,
   updateProductById,
+  getProductsByPriceRange,
 } = require("./config/connectToSQL");
 const app = express();
 app.use(express.json());
 
 app.get("/products", async (req, res) => {
-  const resp = await getAllProducts();
+  const { priceFrom, priceTo } = req.query;
+  let resp;
+  if (priceFrom && priceTo) {
+    if (isNaN(priceFrom) || isNaN(priceTo)) {
+      return res.status(400).json({ message: "i am waitting for numbers" });
+    }
+    resp = await getProductsByPriceRange(priceFrom, priceTo);
+  } else {
+    resp = await getAllProducts();
+  }
   res.json(resp);
 });
 app.get("/products/:id", async (req, res) => {
